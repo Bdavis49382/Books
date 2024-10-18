@@ -1,0 +1,28 @@
+// LOCALHOST 
+
+### Get all books GET http://localhost:3000/books
+
+### Get book by id GET http://localhost:3000/books/67003de3a247bd80fa50d207
+
+### Create book POST http://localhost:3000/books HTTP/1.1 content-type: application/json
+{
+    "title": "Artemis Fowl",
+    "author": "Eoin Colfer",
+    "rating": 7,
+    "review": "A solid start to a really fun series",
+}
+
+// PRODUCTION Deploy 
+
+### Get all books GET https://cse341-o31n.onrender.com/books
+
+### Get book by id GET https://cse341-o31n.onrender.com/books/67003de3a247bd80fa50d207
+
+### Create book POST https://cse341-o31n.onrender.com/books HTTP/1.1 content-type: application/json
+
+{
+    "title": "Artemis Fowl",
+    "author": "Eoin Colfer",
+    "rating": 7,
+    "review": "A solid start to a really fun series",
+}
