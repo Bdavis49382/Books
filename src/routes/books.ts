@@ -12,6 +12,12 @@ router.get("/:id", async (req : Request, res : Response) => {
 });
 
 router.post("/", async (req : Request, res : Response) => {
+  /* #swagger.parameters['reqBody'] = {
+      in: "body",
+      description: "request body",
+      type: "object",
+      required: true
+} */
     res.status(201).send({id : await addBook(req.body)});
 });
 

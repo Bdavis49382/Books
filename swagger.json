@@ -32,6 +32,18 @@
       },
       "post": {
         "description": "",
+        "parameters": [
+          {
+            "name": "reqBody",
+            "in": "body",
+            "description": "request body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        ],
         "responses": {
           "201": {
             "description": "Created"
