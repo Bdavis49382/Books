@@ -14,4 +14,12 @@ const addBook = async (newBook : object) => {
     return result._id;
 }
 
-export {addBook, getAllBooks, getOne};
+const deleteBook = async (id : string) => {
+    return await Book.deleteOne({_id : id});
+}
+
+const updateBook = async (id : string, newBook : object) => {
+    return await Book.updateOne({ _id : id}, newBook);
+}
+
+export {addBook, getAllBooks, getOne, deleteBook, updateBook};
