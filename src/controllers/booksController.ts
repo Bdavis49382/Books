@@ -5,7 +5,7 @@ const getAllBooks = async () => {
 }
 
 const getOne = async (id : string) => {
-    return await Book.find({_id:id});
+    return await Book.findById(id);
 }
 
 const addBook = async (newBook : object) => {

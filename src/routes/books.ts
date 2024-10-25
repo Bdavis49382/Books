@@ -6,43 +6,115 @@ import {
   updateBook,
   deleteBook,
 } from "../controllers/booksController";
-import { userValidationRules } from "../validator";
-import { validationResult } from "express-validator";
+import { bookValidationRules, IDValidationRules, validate } from "../validator";
 
 const router: Router = express.Router();
 
 router.get("/", async (req: Request, res: Response) => {
-  res.send(await getAllBooks());
+  try {
+    res.send(await getAllBooks());
+  } catch (err) {
+    res.status(500).json({
+      message:
+        err instanceof Error
+          ? err.message
+          : "Some error occurred while getting your books: " + String(err),
+    });
+  }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
-  res.send(await getOne(req.params.id));
-});
+router.get(
+  "/:id",
+  IDValidationRules(),
+  validate,
+  async (req: Request, res: Response) => {
+    try {
+      const book = await getOne(req.params.id);
+      if (book == null)
+        res.status(404).json({ message: "no book by that id found." });
+      else res.send(book);
+    } catch (err) {
+      res.status(500).json({
+        message:
+          err instanceof Error
+            ? err.message
+            : "Some error occurred while getting your book: " + String(err),
+      });
+    }
+  }
+);
 
-router.post("/", userValidationRules(), async (req: Request, res: Response) => {
-  /* #swagger.parameters['reqBody'] = {
+router.post(
+  "/",
+  bookValidationRules(),
+  validate,
+  async (req: Request, res: Response) => {
+    /* #swagger.parameters['reqBody'] = {
       in: "body",
       description: "request body",
       type: "object",
       required: true
 } */
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) res.status(422).json({ errors: errors.array() });
-  else res.status(201).send({ id: await addBook(req.body) });
-});
+    try {
+      res.status(201).send({ id: await addBook(req.body) });
+    } catch (err) {
+      res.status(500).json({
+        message:
+          err instanceof Error
+            ? err.message
+            : "Some error occurred while adding your book: " + String(err),
+      });
+    }
+  }
+);
 
-router.put("/:id", async (req: Request, res: Response) => {
-  /* #swagger.parameters['reqBody'] = {
+router.put(
+  "/:id",
+  IDValidationRules(),
+  bookValidationRules(),
+  validate,
+  async (req: Request, res: Response) => {
+    /* #swagger.parameters['reqBody'] = {
       in: "body",
       description: "request body",
       type: "object",
       required: true
 } */
-  res.status(204).send(await updateBook(req.params.id, req.body));
-});
+    try {
+      const book = await getOne(req.params.id);
+      if (book == null)
+        res.status(404).json({ message: "no book by that id found." });
+      else res.status(204).send(await updateBook(req.params.id, req.body));
+    } catch (err) {
+      res.status(500).json({
+        message:
+          err instanceof Error
+            ? err.message
+            : "Some error occurred while updating your book: " + String(err),
+      });
+    }
+  }
+);
 
-router.delete("/:id", async (req: Request, res: Response) => {
-  res.send(await deleteBook(req.params.id));
-});
+router.delete(
+  "/:id",
+  IDValidationRules(),
+  validate,
+  async (req: Request, res: Response) => {
+    try {
+      const book = await getOne(req.params.id);
+      if (book == null)
+        res.status(404).json({ message: "no book by that id found." });
+      else res.send(await deleteBook(req.params.id));
+    } catch (err) {
+      res.status(500).json({
+        message:
+          err instanceof Error
+            ? err.message
+            : "Some error occurred while deleting this book:" + String(err),
+      });
+    }
+  }
+);
 
 export default router;

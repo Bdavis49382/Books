@@ -1,7 +1,7 @@
-import { body, validationResult } from "express-validator";
+import { body, param, validationResult } from "express-validator";
 import { Request, Response, NextFunction } from "express";
 
-export const userValidationRules = () => {
+export const bookValidationRules = () => {
   return [
     body("rating")
       .isInt({ min: 1, max: 10 })
@@ -14,20 +14,29 @@ export const userValidationRules = () => {
   ];
 };
 
-// export const validate = (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ): void | Response => {
-//   const errors = validationResult(req);
-//   if (errors.isEmpty()) {
-//     return next();
-//   }
-//   const extractedErrors: Array<object> = errors.array().map((err) => {
-//     return { [err.type]: err.msg };
-//   });
+export const IDValidationRules = () => {
+  return [
+    param("id")
+      .matches(/^[a-zA-Z0-9]{24}$/)
+      .withMessage("Your id was not a valid MongoDB ID"),
+  ]
+}
 
-//   return res.status(422).json({
-//     errors: extractedErrors,
-//   });
-// };
+export const validate = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const errors = validationResult(req);
+  if (errors.isEmpty()) {
+    next();
+  } else {
+    const extractedErrors: Array<object> = errors.array().map((err) => {
+      return { [err.type]: err.msg };
+    });
+
+    res.status(422).json({
+      errors: extractedErrors,
+    });
+  }
+};
