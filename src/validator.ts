@@ -14,6 +14,15 @@ export const bookValidationRules = () => {
   ];
 };
 
+export const reviewerValidationRules = () => {
+  return [
+    body("firstName")
+      .isLength({min: 2}),
+    body("lastName")
+      .isLength({min: 2})
+  ]
+}
+
 export const IDValidationRules = () => {
   return [
     param("id")

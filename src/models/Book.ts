@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
 
 const book = new mongoose.Schema({
+    reviewer: {
+        type: String
+    },
     title: {
         type: String
     },
@@ -13,6 +16,6 @@ const book = new mongoose.Schema({
     review: {
         type: String
     }
-})
+}, {timestamps: true})
 
 export default mongoose.model("Books", book);
